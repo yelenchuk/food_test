@@ -184,7 +184,7 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   setClock(".timer", deadline); // const testBtn = document.querySelector(".r_btn");
-  // testBtn.addEventListener("click", function () {
+  // testBtn.addEventListener("click", () => {
   //   const testStr = document.querySelector(".test_time"),
   //     timer = document.querySelector(".timer"),
   //     days = timer.querySelector("#days"),
@@ -197,6 +197,58 @@ window.addEventListener("DOMContentLoaded", () => {
   //     minutes.textContent || minutes.innerText
   //   } минут ${seconds.textContent || seconds.innerText} sec`;
   // });
+  // Modal
+
+  const modalButton = document.querySelectorAll("[data-modal]"),
+        modalWindow = document.querySelector(".modal"),
+        closeModal = document.querySelector("[data-close]");
+
+  function openModal() {
+    modalWindow.classList.add("show");
+    modalWindow.classList.remove("hide");
+    document.body.style.overflow = "hidden"; // фиксируем скролл
+
+    clearInterval(modalTimerId); // чтобы не повторялось каждые 5 сек
+  }
+
+  modalButton.forEach(btn => {
+    btn.addEventListener("click", () => {
+      openModal();
+    });
+  });
+
+  function closeModalWindow() {
+    modalWindow.classList.add("hide");
+    modalWindow.classList.remove("show");
+    document.body.style.overflow = "";
+  }
+
+  closeModal.addEventListener("click", closeModalWindow);
+  modalWindow.addEventListener("click", e => {
+    // делаеи закрытие по подложке
+    if (e.target === modalWindow) {
+      console.log(e);
+      closeModalWindow();
+    }
+  });
+  document.addEventListener("keydown", e => {
+    //  закрытие модального окна через  esc
+    if (e.code === "Escape" && modalWindow.classList.contains("show")) {
+      // contains - проверяет наличие класса
+      closeModalWindow();
+    }
+  });
+  const modalTimerId = setTimeout(openModal, 5000);
+
+  function showModalByScroll() {
+    // всплытие модального окна в конце страницы
+    if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+      openModal();
+      window.removeEventListener("scroll", showModalByScroll);
+    }
+  }
+
+  window.addEventListener("scroll", showModalByScroll);
 });
 
 /***/ })
