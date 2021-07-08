@@ -267,17 +267,16 @@ window.addEventListener("DOMContentLoaded", () => {
       ); // json
       const formData = new FormData(form);
 
-      // const object = {};
-      // formData.forEach(function (value, key) {
-      //   object[key] = value;
-      // });
-      // const json = JSON.stringify(object);
+      const object = {};
+      formData.forEach(function (value, key) {
+        object[key] = value;
+      });
 
       fetch("server.php", {
         method: "POST", // куда
-        // headers: {
-        //   'Content-type', 'aplication/json; charset=utf-8'}, // каким образом
-        body: FormData, // что именно
+        headers: {
+          'Content-type', 'aplication/json; charset=utf-8'}, // каким образом
+        body: JSON.stringify(object), // что именно
       })
         .then((data) => data.text))
         .then((data) => {
