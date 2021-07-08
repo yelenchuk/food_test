@@ -267,24 +267,31 @@ window.addEventListener("DOMContentLoaded", () => {
       ); // json
       const formData = new FormData(form);
 
-      const object = {};
-      formData.forEach(function (value, key) {
-        object[key] = value;
-      });
-      const json = JSON.stringify(object);
+      // const object = {};
+      // formData.forEach(function (value, key) {
+      //   object[key] = value;
+      // });
+      // const json = JSON.stringify(object);
 
-      request.send(json);
-
-      request.addEventListener("load", () => {
-        if (request.status === 200) {
-          console.log(request.response);
+      fetch("server.php", {
+        method: "POST", // куда
+        // headers: {
+        //   'Content-type', 'aplication/json; charset=utf-8'}, // каким образом
+        body: FormData, // что именно
+      })
+        .then((data) => {
+          console.log(data);
           showThanksModal(message.success);
-          form.reset(); //очищаем форму  поля
           statusMessage.remove(); //  удаляем сообщения
-        } else {
+        })
+        .catch(() => {
           showThanksModal(message.failure);
-        }
-      });
+        })
+        .finally(() => {
+          form.reset(); //очищаем форму  поля
+        });
+
+      // request.send(json);
     });
   }
 
