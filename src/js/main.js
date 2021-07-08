@@ -279,6 +279,7 @@ window.addEventListener("DOMContentLoaded", () => {
         //   'Content-type', 'aplication/json; charset=utf-8'}, // каким образом
         body: FormData, // что именно
       })
+        .then((data) => data.text))
         .then((data) => {
           console.log(data);
           showThanksModal(message.success);
