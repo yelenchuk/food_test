@@ -258,13 +258,13 @@ window.addEventListener("DOMContentLoaded", () => {
       //form.appendChild(statusMessage);
       form.insertAdjacentElement("afterend", statusMessage);
 
-      const request = new XMLHttpRequest();
-      request.open("POST", "server.php");
-      //request.setRequestHeader("Content-type", "multipart/form-data");
-      request.setRequestHeader(
-        "Content-type",
-        "aplication/json; charset=utf-8"
-      ); // json
+      // const request = new XMLHttpRequest();
+      // request.open("POST", "server.php");
+      // //request.setRequestHeader("Content-type", "multipart/form-data");
+      // request.setRequestHeader(
+      //   "Content-type",
+      //   "aplication/json; charset=utf-8"
+      // ); // json
       const formData = new FormData(form);
 
       const object = {};
@@ -275,10 +275,11 @@ window.addEventListener("DOMContentLoaded", () => {
       fetch("server.php", {
         method: "POST", // куда
         headers: {
-          'Content-type', 'aplication/json; charset=utf-8'}, // каким образом
+          "Content-type": "aplication/json; charset=utf-8",
+        }, // каким образом
         body: JSON.stringify(object), // что именно
       })
-        .then((data) => data.text))
+        // .then((data) => data.text));
         .then((data) => {
           console.log(data);
           showThanksModal(message.success);
@@ -321,4 +322,8 @@ window.addEventListener("DOMContentLoaded", () => {
       closeModalWindow();
     }, 4000);
   }
+  console.log("------>");
+  fetch("http://localhost:3/menu")
+    .then((data) => data.json())
+    .then((res) => console.log(res));
 });
