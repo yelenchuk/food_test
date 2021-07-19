@@ -412,10 +412,54 @@ window.addEventListener("DOMContentLoaded", () => {
       prevModalDialog.classList.remove("hide");
       closeModalWindow();
     }, 4000);
-  } // fetch("http://localhost:3/menu")
-  //   .then((data) => data.json())
-  //   .then((res) => console.log(res));
+  } // Sleder
 
+
+  const slides = document.querySelectorAll(".offer__slide"),
+        prev = document.querySelector(".offer__slider-prev"),
+        next = document.querySelector(".offer__slider-next"),
+        total = document.querySelector("#total"),
+        current = document.querySelector("#current");
+  let slideIndex = 1;
+  showSlides(slideIndex); // делаем инициалтиацию слайда
+
+  if (slides.length < 10) {
+    total.textContent = `0${slides.length}`; // добавляем 0, если число слайдо меньше 10
+  } else {
+    total.textContent = slides.length;
+  }
+
+  function showSlides(n) {
+    // если мы ушли в правую границу, то мы перемещаемся в самое начало слайдов
+    if (n > slides.length) {
+      slideIndex = 1;
+    } // и наоборот
+
+
+    if (n < 1) {
+      slideIndex = slides.length;
+    }
+
+    slides.forEach(iteam => iteam.style.display = "none");
+    slides[slideIndex - 1].style.display = "block";
+
+    if (slides.length < 10) {
+      current.textContent = `0${slideIndex}`;
+    } else {
+      current.textContent = slideIndex;
+    }
+  }
+
+  function plusSlides(n) {
+    showSlides(slideIndex += n);
+  }
+
+  prev.addEventListener("click", () => {
+    plusSlides(-1);
+  });
+  next.addEventListener("click", () => {
+    plusSlides(1);
+  });
 });
 
 /***/ })
