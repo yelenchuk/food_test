@@ -506,11 +506,11 @@ window.addEventListener("DOMContentLoaded", () => {
   next.addEventListener("click", () => {
     //в условии преобразуем '500px' в 500px
     // == ширина 1 слайда + кол-во всех слайдов
-    if (offSet == +width.slice(0, width.length - 2) * (slides.length - 1)) {
+    if (offSet == +width.replace(/\D/g, "") * (slides.length - 1)) {
       console.log(width, width.length, offSet);
       offSet = 0;
     } else {
-      offSet += +width.slice(0, width.length - 2); // когда мы нажимаем на стрелочку, добавляеться ширина еще одного слайда
+      offSet += +width.replace(/\D/g, ""); // когда мы нажимаем на стрелочку, добавляеться ширина еще одного слайда
     }
 
     slidesField.style.transform = `translateX(-${offSet}px)`;
@@ -524,12 +524,17 @@ window.addEventListener("DOMContentLoaded", () => {
     activeSlideNumber();
     activeDot();
   });
+
+  function deleteNotDigits(str) {
+    return +str.replace(/\D/g, "");
+  }
+
   prev.addEventListener("click", () => {
     //в условии мы четко узнали, что сейчас четко 1й слайд
     if (offSet == 0) {
-      offSet = +width.slice(0, width.length - 2) * (slides.length - 1);
+      offSet = deleteNotDigits(width) * (slides.length - 1);
     } else {
-      offSet -= +width.slice(0, width.length - 2); // отнимаем ширину слайда на которую смещаюсь
+      offSet -= deleteNotDigits(width); // отнимаем ширину слайда на которую смещаюсь
     }
 
     slidesField.style.transform = `translateX(-${offSet}px)`;
@@ -546,8 +551,10 @@ window.addEventListener("DOMContentLoaded", () => {
   dots.forEach(dot => {
     dot.addEventListener("click", e => {
       const slideTo = e.target.getAttribute("data-slide-to");
+      console.log("--->", slideTo);
       slideIndex = slideTo;
-      offSet = +width.slice(0, width.length - 2) * (slideTo - 1);
+      offSet = deleteNotDigits(width) * (slideTo - 1);
+      slidesField.style.transform = `translateX(-${offSet}px)`;
       activeSlideNumber();
       activeDot();
     });
