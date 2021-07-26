@@ -474,7 +474,6 @@ window.addEventListener("DOMContentLoaded", () => {
   dots.forEach((dot) => {
     dot.addEventListener("click", (e) => {
       const slideTo = e.target.getAttribute("data-slide-to");
-      console.log("--->", slideTo);
       slideIndex = slideTo;
       offSet = deleteNotDigits(width) * (slideTo - 1);
       slidesField.style.transform = `translateX(-${offSet}px)`;
@@ -487,11 +486,42 @@ window.addEventListener("DOMContentLoaded", () => {
   // Calc
 
   const result = document.querySelector(".calculating__result span");
-  let sex = "femaile",
-    height,
-    weight,
-    age,
+  let sex, height, weight, age, ratio;
+
+  if (localStorage.getItem("sex")) {
+    sex = localStorage.getItem("sex");
+  } else {
+    sex = "female";
+    localStorage.setItem("sex", "female");
+  }
+
+  if (localStorage.getItem("ratio")) {
+    ratio = localStorage.getItem("ratio");
+  } else {
     ratio = 1.375;
+    localStorage.setItem("ratio", 1.375);
+  }
+
+  function initlocalSettings(selector, activeClass) {
+    const elements = document.querySelectorAll(selector);
+    // устанавливаем параметры в localStorage по умолчанию
+
+    elements.forEach((elem) => {
+      elem.classList.remove(activeClass);
+      if (elem.getAttribute("id") === localStorage.getItem("sex")) {
+        elem.classList.add(activeClass);
+      }
+      if (elem.getAttribute("data-ratio") === localStorage.getItem("ratio")) {
+        elem.classList.add(activeClass);
+      }
+    });
+  }
+
+  initlocalSettings("#gender div", "calculating__choose-item_active");
+  initlocalSettings(
+    ".calculating__choose_big div",
+    "calculating__choose-item_active"
+  );
 
   function calcTotal() {
     // делаем проверку на ввод всех input
@@ -513,15 +543,17 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function getStaticInformation(parentSelector, activeClass) {
-    const elements = document.querySelectorAll(`${parentSelector} div`);
+  function getStaticInformation(selector, activeClass) {
+    const elements = document.querySelectorAll(selector);
 
     elements.forEach((elem) => {
       elem.addEventListener("click", (e) => {
         if (e.target.getAttribute("data-ratio")) {
           ratio = +e.target.getAttribute("data-ratio");
+          localStorage.setItem("ratio", +e.target.getAttribute("data-ratio"));
         } else {
           sex = e.target.getAttribute("id");
+          localStorage.setItem("sex", e.target.getAttribute("id"));
         }
 
         elements.forEach((elem) => {
@@ -534,9 +566,10 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  getStaticInformation("#gender", "calculating__choose-item_active");
+  // вызывая ф-цию getStaticInformation важно указать div, так как обращаемся к блокам внутри селектора "#gender div"
+  getStaticInformation("#gender div", "calculating__choose-item_active");
   getStaticInformation(
-    ".calculating__choose_big",
+    ".calculating__choose_big div",
     "calculating__choose-item_active"
   );
 
@@ -544,7 +577,14 @@ window.addEventListener("DOMContentLoaded", () => {
     const input = document.querySelector(selector);
     console.log(input, selector);
 
+    // делаем проверку если пользователь ввел не число
     input.addEventListener("input", () => {
+      if (input.value.match(/\D/g)) {
+        input.style.border = "1px solid red";
+      } else {
+        input.style.border = "none";
+      }
+
       switch (input.getAttribute("id")) {
         case "heigth":
           height = +input.value;
