@@ -1,8 +1,13 @@
-function cards() {
+function tabs(
+  tabsSelector,
+  tabsContentSelector,
+  tabsParentSelector,
+  activeClass
+) {
   // Tab
-  let tabs = document.querySelectorAll(".tabheader__item"),
-    tabsContent = document.querySelectorAll(".tabcontent");
-  tabParent = document.querySelector(".tabheader__items");
+  let tabs = document.querySelectorAll(tabsSelector),
+    tabsContent = document.querySelectorAll(tabsContentSelector),
+    tabParent = document.querySelector(tabsParentSelector);
 
   function hideTabContent() {
     tabsContent.forEach((item) => {
@@ -11,21 +16,21 @@ function cards() {
     });
 
     tabs.forEach((item) => {
-      item.classList.remove("tabheader__item_active");
+      item.classList.remove(activeClass);
     });
   }
 
   function showTabContent(i = 0) {
     tabsContent[i].classList.add("show", "fade");
     tabsContent[i].classList.remove("hide");
-    tabs[i].classList.add("tabheader__item_active");
+    tabs[i].classList.add(activeClass);
   }
   hideTabContent();
   showTabContent();
 
   tabParent.addEventListener("click", function (event) {
     const target = event.target;
-    if (target && target.classList.contains("tabheader__item")) {
+    if (target && target.classList.contains(tabsSelector.slice(1))) {
       tabs.forEach((item, i) => {
         if (target == item) {
           hideTabContent();
@@ -36,4 +41,4 @@ function cards() {
   });
 }
 
-module.exports = cards;
+export default tabs;

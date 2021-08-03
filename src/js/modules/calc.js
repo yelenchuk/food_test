@@ -91,7 +91,6 @@ function calc() {
 
   function getDynamicInformation(selector) {
     const input = document.querySelector(selector);
-    console.log(input, selector);
 
     // делаем проверку если пользователь ввел не число
     input.addEventListener("input", () => {
@@ -122,4 +121,4 @@ function calc() {
   getDynamicInformation("#age");
 }
 
-module.exports = calc;
+export default calc;

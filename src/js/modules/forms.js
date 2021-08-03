@@ -1,7 +1,10 @@
-function forms() {
+import { closeModalWindow, openModal } from "./modal";
+import { postData } from "../services/services";
+
+function forms(formSelector, modalTimerId) {
   //Forms
 
-  const forms = document.querySelectorAll("form");
+  const forms = document.querySelectorAll(formSelector);
 
   const message = {
     loading: "img/form/spinner.svg",
@@ -12,20 +15,6 @@ function forms() {
   forms.forEach((item) => {
     bindPostData(item);
   });
-
-  const postData = async (url, data) => {
-    // postData постинг данных, когда мы отправляем их на сервер
-    const res = await fetch(url, {
-      method: "POST", // куда
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      }, // каким образом
-      body: data, // что именно
-    });
-
-    return await res.json();
-  };
 
   function bindPostData(form) {
     // ф-ция отвечает за привязку постинга
@@ -46,7 +35,7 @@ function forms() {
 
       const json = JSON.stringify(Object.fromEntries(formData.entries()));
 
-      postData("http://localhost:3333/requests", json)
+      postData("http://localhost:3939/requests", json)
         .then((data) => {
           console.log("data is - ", data);
           showThanksModal(message.success);
@@ -67,7 +56,7 @@ function forms() {
 
     prevModalDialog.classList.add("hide"); // показать блок
     prevModalDialog.classList.remove("show");
-    openModal();
+    openModal(".modal", modalTimerId);
 
     const thanksModal = document.createElement("div"); // создать блок
     thanksModal.classList.add("modal__dialog");
@@ -84,7 +73,7 @@ function forms() {
       thanksModal.remove(); // делаем этот шаг что-бы не накапливались блоки
       prevModalDialog.classList.add("show");
       prevModalDialog.classList.remove("hide");
-      closeModalWindow();
+      closeModalWindow(".modal");
     }, 4000);
   }
 }

@@ -1,18 +1,28 @@
-function slider() {
+function slider({
+  container,
+  slide,
+  nextArrow,
+  prewArrow,
+  totalCounter,
+  currentCounter,
+  wrapper,
+  field,
+}) {
   // Slider
-
-  const slides = document.querySelectorAll(".offer__slide"),
-    prev = document.querySelector(".offer__slider-prev"),
-    next = document.querySelector(".offer__slider-next"),
-    total = document.querySelector("#total"),
-    current = document.querySelector("#current"),
-    slidesWrapper = document.querySelector(".offer__slider-wrapper"),
-    slidesField = document.querySelector(".offer__slider-inner"),
-    width = window.getComputedStyle(slidesWrapper).width,
-    slider = document.querySelector(".offer__slider");
-
+  let offset = 0; // отсутуп впрово или влево, чтобы  понять как управлять трансформом
   let slideIndex = 1;
-  let offSet = 0; // отсутуп впрово или влево, чтобы  понять как управлять трансформом
+
+  console.log(document.querySelector(wrapper));
+
+  const slider = document.querySelector(container),
+    slides = document.querySelectorAll(slide),
+    prev = document.querySelector(prewArrow),
+    next = document.querySelector(nextArrow),
+    total = document.querySelector(totalCounter),
+    current = document.querySelector(currentCounter),
+    slidesWrapper = document.querySelector(wrapper),
+    slidesField = document.querySelector(field),
+    width = window.getComputedStyle(slidesWrapper).width;
 
   if (slides.length < 10) {
     total.textContent = `0${slides.length}`;
@@ -92,13 +102,13 @@ function slider() {
   next.addEventListener("click", () => {
     //в условии преобразуем '500px' в 500px
     // == ширина 1 слайда + кол-во всех слайдов
-    if (offSet == +width.replace(/\D/g, "") * (slides.length - 1)) {
-      console.log(width, width.length, offSet);
-      offSet = 0;
+    if (offset == +width.replace(/\D/g, "") * (slides.length - 1)) {
+      console.log(width, width.length, offset);
+      offset = 0;
     } else {
-      offSet += +width.replace(/\D/g, ""); // когда мы нажимаем на стрелочку, добавляеться ширина еще одного слайда
+      offset += +width.replace(/\D/g, ""); // когда мы нажимаем на стрелочку, добавляеться ширина еще одного слайда
     }
-    slidesField.style.transform = `translateX(-${offSet}px)`;
+    slidesField.style.transform = `translateX(-${offset}px)`;
 
     if (slideIndex == slides.length) {
       slideIndex = 1;
@@ -116,12 +126,12 @@ function slider() {
 
   prev.addEventListener("click", () => {
     //в условии мы четко узнали, что сейчас четко 1й слайд
-    if (offSet == 0) {
-      offSet = deleteNotDigits(width) * (slides.length - 1);
+    if (offset == 0) {
+      offset = deleteNotDigits(width) * (slides.length - 1);
     } else {
-      offSet -= deleteNotDigits(width); // отнимаем ширину слайда на которую смещаюсь
+      offset -= deleteNotDigits(width); // отнимаем ширину слайда на которую смещаюсь
     }
-    slidesField.style.transform = `translateX(-${offSet}px)`;
+    slidesField.style.transform = `translateX(-${offset}px)`;
 
     if (slideIndex == 1) {
       slideIndex = slides.length;
@@ -136,8 +146,8 @@ function slider() {
     dot.addEventListener("click", (e) => {
       const slideTo = e.target.getAttribute("data-slide-to");
       slideIndex = slideTo;
-      offSet = deleteNotDigits(width) * (slideTo - 1);
-      slidesField.style.transform = `translateX(-${offSet}px)`;
+      offset = deleteNotDigits(width) * (slideTo - 1);
+      slidesField.style.transform = `translateX(-${offset}px)`;
 
       activeSlideNumber();
       activeDot();
@@ -145,4 +155,4 @@ function slider() {
   });
 }
 
-module.exports = slider;
+export default slider;
